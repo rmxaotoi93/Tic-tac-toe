@@ -3,28 +3,53 @@ import Square from './Square'
 
 export default class Board extends Component {
     state = {
-        mess:''
+        mess: '',
+
     }
     renderSquare = (num) => {
-        return <Square id={num} boxClick={this.boxClick} value={this.props.squares[num] } />
+        return <Square id={num} boxClick={this.boxClick} value={this.props.squares[num]} />
     }
-    
+
 
     boxClick = (id) => {
+        let currentPointer = this.props.current
+        currentPointer++
         console.log('id', id);
         //change value from null to 'x' at the array index number id
         let squaresFromApp = this.props.squares
         console.log('squrreurere', squaresFromApp);
-        squaresFromApp[id] = this.props.isXNext ? 'X':'O'
+
+        squaresFromApp[id] = this.props.isXNext ? 'x' : 'o'
         console.log('after change', squaresFromApp[id]);
-        this.props.setTheState({squares:squaresFromApp, isXNext:!this.props.isXNext})
-        this.showWinner(squaresFromApp)
-        
-        
+
+        let cutHistory = this.props.history.slice(0, currentPointer)
+
+
+        if (this.showWinner(squaresFromApp)) {
+            this.props.setTheState({
+                squares: Array(9).fill(null),
+                isXNext: true,  //if its true then X, false then O
+                history: [],
+                current: 0,
+                userName: this.props.userName,
+                timeCount: 30,
+
+            });
+        }
+
+        this.props.setTheState({
+            squares: squaresFromApp,
+            isXNext: !this.props.isXNext,
+            history: [...cutHistory.slice(),
+            { squares: squaresFromApp.slice(), isXNext: !this.props.isXNext }], current: currentPointer
+        })
     }
-    showWinner = (squaresFromApp)=>{
-        console.log('zxascz',squaresFromApp)
-        
+
+   
+    
+    showWinner = (squaresFromApp) => {
+
+
         const lines = [
             [0, 1, 2],
             [3, 4, 5],
@@ -34,20 +59,22 @@ export default class Board extends Component {
             [2, 5, 8],
             [0, 4, 8],
             [2, 4, 6],
-          ];
-          for (let i = 0; i < lines.length; i++) {
+        ];
+        for (let i = 0; i < lines.length; i++) {
             const [a, b, c] = lines[i];
             if (squaresFromApp[a] && squaresFromApp[a] === squaresFromApp[b] && squaresFromApp[a] === squaresFromApp[c]) {
-              return this.setState({mess:`${squaresFromApp[a] }win`})
+
+                this.setState({ mess: `${squaresFromApp[a]}win` })
+                return true;
 
             }
-          }
-          return null;
-        
+        }
+        return null;
+
     }
     render() {
-        let status=''
-        status =`next player:${this.props.isXNext?'X':'O'}`
+        let status = ''
+        status = `next player:${this.props.isXNext ? 'X' : 'O'}`
         let message = `Player winner :${this.state.mess}`
         return (
             <div>
