@@ -14,7 +14,7 @@ export default class App extends Component {
       isLogin: false,
       userName: '',
       timeCount: 30,
-      gameOver: false,
+      topRank:[],
     }
   }
   setTheState = (obj) => {
@@ -38,10 +38,16 @@ export default class App extends Component {
 
     this.setState({ isLogin: true, userName: response.name, })
   }
-
+  getData = async()=>{
+    let url = 'https://ftw-highscores.herokuapp.com/tictactoe-dev';
+    let data = await fetch(url)
+    let res = await data.json()
+    console.log('what is results: ',res);
+    this.setState({...this.state,topRank:res.items})
+  }
 
   componentDidMount() {
-
+    this.getData();
     const timer = setInterval(() => {
       this.setState({ timeCount: this.state.timeCount - 1 })
       if (this.state.timeCount === 0) {
@@ -51,20 +57,7 @@ export default class App extends Component {
     }, 1000)
 
   }
-  postData = async() => {
-    let data = new URLSearchParams();
-    data.append("player", "PLAYER_NAME");
-    data.append("score", "TIME_ELAPSED_IN_SECONDS");
-    const url = `https://ftw-highscores.herokuapp.com/tictactoe-dev`;
-    const response = await fetch(url, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/x-www-form-urlencoded"
-        },
-        body: data.toString(),
-        json: true
-    });
-}
+  
 
   render() {
     if (this.state.isLogin === true) {
@@ -76,6 +69,7 @@ export default class App extends Component {
             <div>hístory{this.state.history.map((item, index) => { return <div><button key={item} onClick={() => { this.timeTravel(index) }}>move{index + 1}</button></div> })}</div>
             <div><h1 >Nameneeeeeeee {this.state.userName}</h1></div>
             <div><h1>Time:00:00:{this.state.timeCount}</h1></div>
+            <div>Top rank{this.state.topRank.map(item=> {return <div>{item.player}:{item.score}</div>})} </div>
           </div>
         </div>
       )

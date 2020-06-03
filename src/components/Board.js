@@ -9,7 +9,22 @@ export default class Board extends Component {
     renderSquare = (num) => {
         return <Square id={num} boxClick={this.boxClick} value={this.props.squares[num]} />
     }
-
+postData = async() => {
+        let data = new URLSearchParams();
+        data.append("player", "PLAYERRRRRR_NAME");
+        data.append("score", "TIME_ELAPSED_IN_SECONDS");
+        console.log('dataaaa', data);
+        
+        const url = `https://ftw-highscores.herokuapp.com/tictactoe-dev`;
+        const response = await fetch(url, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: data.toString(),
+            json: true
+        });
+    }
 
     boxClick = (id) => {
         let currentPointer = this.props.current
@@ -24,18 +39,8 @@ export default class Board extends Component {
 
         let cutHistory = this.props.history.slice(0, currentPointer)
 
-
-        if (this.showWinner(squaresFromApp)) {
-            this.props.setTheState({
-                squares: Array(9).fill(null),
-                isXNext: true,  //if its true then X, false then O
-                history: [],
-                current: 0,
-                userName: this.props.userName,
-                timeCount: 30,
-
-            });
-        }
+        
+        this.postData()
 
         this.props.setTheState({
             squares: squaresFromApp,
@@ -43,9 +48,21 @@ export default class Board extends Component {
             history: [...cutHistory.slice(),
             { squares: squaresFromApp.slice(), isXNext: !this.props.isXNext }], current: currentPointer
         })
+        if (this.showWinner(squaresFromApp)) {
+            
+
+            this.props.setTheState({
+                squares: Array(9).fill(null),
+                isXNext: true,  //if its true then X, false then O
+                history: [],
+                current: 0,
+                userName: this.props.userName,
+                timeCount: 30,
+            });
+        }
     }
 
-   
+    
     
     showWinner = (squaresFromApp) => {
 
@@ -66,11 +83,10 @@ export default class Board extends Component {
 
                 this.setState({ mess: `${squaresFromApp[a]}win` })
                 return true;
-
+                
             }
         }
         return null;
-
     }
     render() {
         let status = ''
