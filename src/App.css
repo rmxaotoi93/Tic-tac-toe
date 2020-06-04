@@ -1,6 +1,6 @@
 .App {
   text-align: center;
-  display: flex;
+  
 }
 
 .App-logo {
@@ -48,4 +48,7 @@
 }
 .redValue{
   color: red;
+}
+.topRank{
+ text-align: right;
 }

@@ -60,28 +60,30 @@ export default class App extends Component {
   
 
   render() {
-    if (this.state.isLogin === true) {
+    // if (this.state.isLogin === true) {
       return (
         <div className="App">
           <h1>Tic Tac Toe !!!!!</h1>
           <div style={{ display: "flex" }}>
-            <Board {...this.state} setTheState={this.setTheState} />
+            
             <div>hístory{this.state.history.map((item, index) => { return <div><button key={item} onClick={() => { this.timeTravel(index) }}>move{index + 1}</button></div> })}</div>
-            <div><h1 >Nameneeeeeeee {this.state.userName}</h1></div>
+      
+            <div><h1 >Name {this.state.userName}</h1></div>
+            <Board {...this.state} setTheState={this.setTheState} />
             <div><h1>Time:00:00:{this.state.timeCount}</h1></div>
-            <div>Top rank{this.state.topRank.map(item=> {return <div>{item.player}:{item.score}</div>})} </div>
+            <div class='topRank'>Top rank{this.state.topRank.map(item=> {return <div>{item.player}:{item.score}</div>})} </div>
           </div>
         </div>
       )
     }
-    else {
-      return <FacebookLogin
-        autoLoad={true}
-        appId="701601370632048"
-        fields="name,email,picture"
-        callback={(resp) => this.responseFacebook(resp)}
-      />
-    }
+    // else {
+    //   return <FacebookLogin 
+    //     autoLoad={true}
+    //     appId="701601370632048"
+    //     fields="name,email,picture"
+    //     callback={(resp) => this.responseFacebook(resp)}
+    //   />
+    // }
 
-  }
+  // }
 }

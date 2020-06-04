@@ -11,7 +11,7 @@ export default class Board extends Component {
     }
 postData = async() => {
         let data = new URLSearchParams();
-        data.append("player", "PLAYERRRRRR_NAME");
+        data.append("player", this.props.userName);
         data.append("score", "TIME_ELAPSED_IN_SECONDS");
         console.log('dataaaa', data);
         
